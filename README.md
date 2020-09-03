@@ -1,4 +1,4 @@
-# DIGA.Tools.Compiler a LIBTCC Wrapper
+# DIGA.Tools.Compiler.Tcc a LIBTCC Wrapper
 
 This Dll wraps the native LIBTCC.dll.
 
