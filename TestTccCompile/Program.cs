@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using DIGA.Tools.Compiler;
 using DIGA.Tools.Compiler.Tcc;
 
 namespace TestTccCompile
@@ -95,6 +94,9 @@ namespace TestTccCompile
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public delegate int Foo(int n, string txt);
 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        public delegate void OnClick(IntPtr hWnd);
+
         static void Main(string[] args)
         {
             string code = "#include <tcclib.h>\n" + /* include the "Simple libc header for TCC" */
@@ -124,58 +126,76 @@ namespace TestTccCompile
             //The Object must be disposed!!!
             using (var compiler = new TccCompiler())
             {
-                compiler.SetOutPutType(TccOutputType.Memory);
-                if (compiler.CompileString(code) == -1)
+                //compiler.SetOutPutType(TccOutputType.Memory);
+                //string fp = Path.Combine(Environment.CurrentDirectory, "Code.c");
+
+                //code = File.ReadAllText(fp);
+
+
+
+
+                //if (compiler.CompileString(code) == -1)
+                //{
+                //    Console.WriteLine("Could not comple");
+                //    return;
+                //}
+
+                DelegatePtr bnClick = new OnClick(OnButtonClick);
+                compiler.BeforeCompile = () =>
                 {
-                    Console.WriteLine("Could not comple");
-                    return;
-                }
+                    compiler.AddSymbol("ButtonClick", bnClick);
+                };
 
-            
-                Add addDel = AddImp;
-                DelegatePtr addPtr = addDel;
-                int retVal = compiler.AddSymbol("add", addPtr);
-                if (retVal != 0)
-                {
-                    Console.WriteLine("Cannot add Smbol add!");
-                    addPtr.Dispose();
-                    return;
-                }
+                compiler.Run( "Code.c");
+
+                bnClick.Dispose();
+                //Add addDel = AddImp;
+                //DelegatePtr addPtr = addDel;
+                //int retVal = compiler.AddSymbol("add", addPtr);
+                //if (retVal != 0)
+                //{
+                //    Console.WriteLine("Cannot add Smbol add!");
+                //    addPtr.Dispose();
+                //    return;
+                //}
 
 
-                string hello = "hallo Welt";
-                //IntPtr halloPtr = Marshal.StringToHGlobalAnsi(hello);
-                HGlobalAnsiStringPtr halloPtr = hello;
-                compiler.AddSymbol("hello", halloPtr);
+                //string hello = "hallo Welt";
+                ////IntPtr halloPtr = Marshal.StringToHGlobalAnsi(hello);
+                //HGlobalAnsiStringPtr halloPtr = hello;
+                //compiler.AddSymbol("hello", halloPtr);
 
-                if (compiler.Reallocate(TccRealocateConst.TCC_RELOCATE_AUTO) < 0)
-                {
-                    Console.WriteLine("Could not reloacate the intern pointers");
-                    addPtr.Dispose();
-                    halloPtr.Dispose();
-                    return;
-                }
+                //if (compiler.Reallocate(TccRealocateConst.TCC_RELOCATE_AUTO) < 0)
+                //{
+                //    Console.WriteLine("Could not reloacate the intern pointers");
+                //    addPtr.Dispose();
+                //    halloPtr.Dispose();
+                //    return;
+                //}
 
-                DelegatePtr<Foo> fooPtr = compiler.GetSymbol("foo");
-                if (!fooPtr.IsValid)
-                {
-                    Console.WriteLine("cannot get foo Symbol!");
-                    addPtr.Dispose();
-                    halloPtr.Dispose();
-                    return;
-                }
+                //DelegatePtr<Foo> fooPtr = compiler.GetSymbol("foo");
+                //if (!fooPtr.IsValid)
+                //{
+                //    Console.WriteLine("cannot get foo Symbol!");
+                //    addPtr.Dispose();
+                //    halloPtr.Dispose();
+                //    return;
+                //}
 
-                fooPtr.Delegate(32, "Eingabe Text1");
-                fooPtr.Delegate(23, "Eingabe Text2");
+                //fooPtr.Delegate(32, "Eingabe Text1");
+                //fooPtr.Delegate(23, "Eingabe Text2");
 
-                halloPtr.Dispose();
-                addPtr.Dispose();
-                
+                //halloPtr.Dispose();
+                //addPtr.Dispose();
+
 
             }
         }
 
-
+        private static void OnButtonClick(IntPtr hWnd)
+        {
+            Console.WriteLine("OnClick");
+        }
         private static int AddImp(int a, int b)
         {
             return a + b;

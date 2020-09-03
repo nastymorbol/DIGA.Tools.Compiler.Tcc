@@ -9,6 +9,7 @@ namespace DIGA.Tools.Compiler.Tcc
     {
     
         public readonly HandleRef Handle;
+        public Action BeforeCompile;
         public TccCompiler()
         {
             FileInfo fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
@@ -33,6 +34,11 @@ namespace DIGA.Tools.Compiler.Tcc
             this.AddLibraryPath(defaultLibPath);
 
         }
+
+        protected void OnBeforeCompile()
+        {
+            this.BeforeCompile?.Invoke();
+        }
         /// <summary>
         /// Infomrs you if you are using the 64 bit Version
         /// If true the calling Application uses 64 bit
@@ -43,6 +49,36 @@ namespace DIGA.Tools.Compiler.Tcc
             get => IntPtr.Size == 8;
         }
 
+        /// <summary>
+        /// Read Source from File
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public string GetSourceFromFile(string filePath)
+        {
+            if(!File.Exists(filePath))
+                throw new FileNotFoundException("Cannot find File:" + filePath);
+
+            
+            string retString = File.ReadAllText(filePath);
+
+            return retString;
+
+        }
+
+        public int Run(string sourceFile, params string[] args)
+        {
+            this.SetOutPutType(TccOutputType.Memory);
+            string soruce = GetSourceFromFile(sourceFile);
+
+            int compileResult = this.CompileString(soruce);
+            if (compileResult == -1)
+            {
+                return -1;
+            }
+
+            return this.Run(args);
+        }
         private HandleRef CreateNew()
         {
             if (this.IsX64)
@@ -230,6 +266,7 @@ namespace DIGA.Tools.Compiler.Tcc
         /// <returns>Return -1 if error</returns>
         public int CompileString(string buffer)
         {
+            OnBeforeCompile();
             if (this.IsX64)
             {
                 return TccNativeX64.CompileString(this.Handle, buffer);

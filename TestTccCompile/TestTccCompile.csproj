@@ -91,5 +91,10 @@
       <Name>DIGA.Tools.Compiler.Tcc</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Code.c">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
