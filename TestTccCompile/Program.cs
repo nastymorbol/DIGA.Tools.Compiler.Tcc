@@ -122,7 +122,7 @@ namespace TestTccCompile
             //The Object must be disposed!!!
             using (var compiler = new TccCompiler())
             {
-                compiler.SetOutPutType(TccOutputType.Memory);
+                compiler.SetOutPutType(TccOutputType.Dll);
                 if (compiler.CompileString(code) == -1)
                 {
                     Console.WriteLine("Could not comple");
