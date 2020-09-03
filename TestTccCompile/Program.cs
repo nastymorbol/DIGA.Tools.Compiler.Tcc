@@ -146,6 +146,7 @@ namespace TestTccCompile
                     compiler.AddSymbol("ButtonClick", bnClick);
                 };
 
+                //Waits until windows closed!
                 compiler.Run( "Code.c");
 
                 bnClick.Dispose();
