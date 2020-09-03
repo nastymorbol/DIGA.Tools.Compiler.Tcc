@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using DIGA.Tools.Compiler;
+using DIGA.Tools.Compiler.Tcc;
+
 namespace TestTccCompile
 {
    

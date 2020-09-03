@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace DIGA.Tools.Compiler
+namespace DIGA.Tools.Compiler.Tcc
 {
     public class TccCompiler:IDisposable
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DIGA.Tools.Compiler
+namespace DIGA.Tools.Compiler.Tcc
 {
     public static class TccRealocateConst
     {

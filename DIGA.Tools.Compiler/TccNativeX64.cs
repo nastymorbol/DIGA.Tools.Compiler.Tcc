@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace DIGA.Tools.Compiler
+namespace DIGA.Tools.Compiler.Tcc
 {
     internal  static class TccNativeX64
     {

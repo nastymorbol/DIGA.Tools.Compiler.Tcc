@@ -86,9 +86,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DIGA.Tools.Compiler\DIGA.Tools.Compiler.csproj">
+    <ProjectReference Include="..\DIGA.Tools.Compiler\DIGA.Tools.Compiler.Tcc.csproj">
       <Project>{968f143e-c493-4b6e-8811-32e760e14b32}</Project>
-      <Name>DIGA.Tools.Compiler</Name>
+      <Name>DIGA.Tools.Compiler.Tcc</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
