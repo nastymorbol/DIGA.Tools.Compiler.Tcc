@@ -140,16 +140,19 @@ namespace TestTccCompile
                 //    return;
                 //}
 
+     
                 DelegatePtr bnClick = new OnClick(OnButtonClick);
-                compiler.BeforeCompile = () =>
+                compiler.BeforeCompileAction = () =>
                 {
                     compiler.AddSymbol("ButtonClick", bnClick);
                 };
 
+                compiler.CompilerErrorAction = ErrorFuncDel;
                 //Waits until windows closed!
                 compiler.Run( "Code.c");
 
                 bnClick.Dispose();
+               
                 //Add addDel = AddImp;
                 //DelegatePtr addPtr = addDel;
                 //int retVal = compiler.AddSymbol("add", addPtr);
@@ -191,6 +194,11 @@ namespace TestTccCompile
 
 
             }
+        }
+
+        private static void ErrorFuncDel(string msg)
+        {
+            Console.WriteLine("Error=>" + msg);
         }
 
         private static void OnButtonClick(IntPtr hWnd)

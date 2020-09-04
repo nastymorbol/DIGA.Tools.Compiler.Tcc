@@ -43,7 +43,7 @@ namespace DIGA.Tools.Compiler.Tcc
         /// <param name="errorFunc">error_funcDelegate</param>
         [DllImport(DllName, EntryPoint = "tcc_set_error_func", CallingConvention = Callingconvention,
             CharSet = CharSet.Ansi)]
-        public static extern void SetErrorFunc([In] HandleRef s, object errorOpaque, TccErrorFuncDelegate32 errorFunc);
+        public static extern void SetErrorFunc([In] HandleRef s, IntPtr errorOpaque, TccErrorFuncDelegate32 errorFunc);
 
         /// <summary>
         /// set options as from command line (multiple supported)

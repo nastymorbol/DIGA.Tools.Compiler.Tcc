@@ -5,15 +5,30 @@ using System.Runtime.InteropServices;
 
 namespace DIGA.Tools.Compiler.Tcc
 {
-    public class TccCompiler:IDisposable
+    public class TccCompiler : IDisposable
     {
-    
+        private HandleRef _OpaqueRef;
+
         public readonly HandleRef Handle;
-        public Action BeforeCompile;
+
+        /// <summary>
+        /// Action invoked before Compile the source
+        /// </summary>
+        public Action BeforeCompileAction { get; set; }
+
+        /// <summary>
+        /// Action invoked on Compiler Error or Warning
+        /// </summary>
+        public Action<string> CompilerErrorAction { get; set; }
+
+        /// <summary>
+        /// Ctor of TccCompiler
+        /// </summary>
         public TccCompiler()
         {
             FileInfo fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
             string dirPath = fi.DirectoryName;
+
 
             if (dirPath == null)
             {
@@ -25,20 +40,47 @@ namespace DIGA.Tools.Compiler.Tcc
             var defaultIncludePath = Path.Combine(dirPath, "native\\include");
             var defaultIncludeWindows = Path.Combine(dirPath, "native\\include\\winapi");
             this.Handle = CreateNew();
-            if (this.Handle.Handle == IntPtr.Zero) 
-                throw new Exception("Could not create TCC INstance!");
+            if (this.Handle.Handle == IntPtr.Zero)
+                throw new Exception("Could not create TCC Instance!");
+            this._OpaqueRef = new HandleRef(this, Marshal.AllocHGlobal(512));
+            if (this.IsX64)
+            {
+                TccErrorFuncDelegate64 dllErr = InternalCompilerErrorFunc;
+                this.SetErrorFunction64(dllErr);
+            }
+            else
+            {
+                TccErrorFuncDelegate32 dllErr = InternalCompilerErrorFunc;
+                this.SetErrorFunction32(dllErr);
+            }
 
             this.AddIncludePath(defaultIncludePath);
             this.AddIncludePath(defaultTccIncludePath);
             this.AddIncludePath(defaultIncludeWindows);
             this.AddLibraryPath(defaultLibPath);
-
         }
 
-        protected void OnBeforeCompile()
+        private void InternalCompilerErrorFunc(IntPtr opaque, string msg)
         {
-            this.BeforeCompile?.Invoke();
+            OnCompilerError(msg);
         }
+        /// <summary>
+        /// Invoking Function of CompilerErrorActions
+        /// </summary>
+        /// <param name="message">Error/Warning message</param>
+        protected virtual void OnCompilerError(string message)
+        {
+            this.CompilerErrorAction?.Invoke(message);
+        }
+
+        /// <summary>
+        /// Invoking Function of BeforeCompilerAction
+        /// </summary>
+        protected virtual void OnBeforeCompile()
+        {
+            this.BeforeCompileAction?.Invoke();
+        }
+
         /// <summary>
         /// Infomrs you if you are using the 64 bit Version
         /// If true the calling Application uses 64 bit
@@ -56,14 +98,64 @@ namespace DIGA.Tools.Compiler.Tcc
         /// <returns></returns>
         public string GetSourceFromFile(string filePath)
         {
-            if(!File.Exists(filePath))
+            if (!File.Exists(filePath))
                 throw new FileNotFoundException("Cannot find File:" + filePath);
 
-            
+
             string retString = File.ReadAllText(filePath);
 
             return retString;
+        }
 
+        public int CompileSourceToDll(string source, string destinationFile)
+        {
+            return CompileSourceTo(source, TccOutputType.Dll, destinationFile);
+        }
+
+        public int CompileSourceToExe(string source, string destinationFile)
+        {
+            return CompileSourceTo(source, TccOutputType.Exe, destinationFile);
+        }
+
+        public int CompileSourceToObj(string source, string destinationFile)
+        {
+            return CompileSourceTo(source, TccOutputType.Obj, destinationFile);
+        }
+
+        public int CompileFileToDll(string fileName, string destinationFile)
+        {
+            return CompleFileTo(fileName, TccOutputType.Dll, destinationFile);
+        }
+
+        public int CompileFileToExe(string fileName, string destinationFile)
+        {
+            return CompleFileTo(fileName, TccOutputType.Exe, destinationFile);
+        }
+
+        public int CompileFileToObj(string fileName, string destnationFile)
+        {
+            return CompleFileTo(fileName, TccOutputType.Obj, destnationFile);
+        }
+
+        public int CompleFileTo(string fileName, TccOutputType outputType, string destinationFile)
+        {
+            if (!File.Exists(fileName))
+                throw new FileNotFoundException("The sourcefile does not exiest!=>" + fileName);
+
+            string soruceCode = File.ReadAllText(fileName);
+            return CompileSourceTo(soruceCode, outputType, destinationFile);
+        }
+
+        public int CompileSourceTo(string sourceCode, TccOutputType outputType, string destinationFile)
+        {
+            this.SetOutPutType(outputType);
+            int compileResult = this.CompileString(sourceCode);
+            if (compileResult == -1)
+            {
+                return -1;
+            }
+
+            return this.CreateOutputFile(destinationFile);
         }
 
         public int Run(string sourceFile, params string[] args)
@@ -79,11 +171,12 @@ namespace DIGA.Tools.Compiler.Tcc
 
             return this.Run(args);
         }
+
         private HandleRef CreateNew()
         {
             if (this.IsX64)
             {
-                return  new HandleRef(this,  TccNativeX64.CreateNew());
+                return new HandleRef(this, TccNativeX64.CreateNew());
             }
             else
             {
@@ -93,7 +186,7 @@ namespace DIGA.Tools.Compiler.Tcc
 
         private void Delete()
         {
-            if(this.Handle.Handle == IntPtr.Zero) return;
+            if (this.Handle.Handle == IntPtr.Zero) return;
             if (this.IsX64)
             {
                 TccNativeX64.Destroy(this.Handle);
@@ -119,6 +212,7 @@ namespace DIGA.Tools.Compiler.Tcc
                 TccNativeX86.SetLibPath(this.Handle, path);
             }
         }
+
         /// <summary>
         /// set error/warning display callback 32 bit
         /// </summary>
@@ -126,21 +220,20 @@ namespace DIGA.Tools.Compiler.Tcc
         /// Please ensure that the transferred function can be called natively and that it has the CDECL calling convention.
         /// To do this, use the "UnmanagedFunctionPointer" attribute. 
         /// </remarks>
-        /// <param name="errorOpaque">error data</param>
         /// <param name="errorFunction">Function delegate</param>
-        public void SetErrorFunction32(object errorOpaque, TccErrorFuncDelegate32 errorFunction)
+        public void SetErrorFunction32(TccErrorFuncDelegate32 errorFunction)
         {
             if (this.IsX64)
             {
                 throw new Exception(
                     "You are using the 64 bit version please call SetErrorFunction32: The delegate must have the calling conventions STDCALL");
-
             }
             else
             {
-                TccNativeX86.SetErrorFunc(this.Handle, errorOpaque, errorFunction);
+                TccNativeX86.SetErrorFunc(this.Handle, this._OpaqueRef.Handle, errorFunction);
             }
         }
+
         /// <summary>
         /// set error/warning display callback 64 bit
         /// </summary>
@@ -148,13 +241,12 @@ namespace DIGA.Tools.Compiler.Tcc
         /// Please ensure that the transferred function can be called natively and that it has the STDCALL calling convention.
         /// To do this, use the "UnmanagedFunctionPointer" attribute. 
         /// </remarks>
-        /// <param name="errorOpaque">error data</param>
         /// <param name="errorFunction">Function delegate</param>
-        public void SetErrorFunction64(object errorOpaque, TccErrorFuncDelegate64 errorFunction)
+        public void SetErrorFunction64(TccErrorFuncDelegate64 errorFunction)
         {
             if (this.IsX64)
             {
-                TccNativeX64.SetErrorFunc(this.Handle, errorOpaque, errorFunction);
+                TccNativeX64.SetErrorFunc(this.Handle, this._OpaqueRef.Handle, errorFunction);
             }
             else
             {
@@ -162,6 +254,7 @@ namespace DIGA.Tools.Compiler.Tcc
                     "You are using the 32 bit version please call SEtErrorFunction32: The delegate must have the calling conventions CDECL");
             }
         }
+
         /// <summary>
         /// set options as from command line (multiple supported)
         /// </summary>
@@ -177,6 +270,7 @@ namespace DIGA.Tools.Compiler.Tcc
                 TccNativeX86.SetOptions(this.Handle, option);
             }
         }
+
         /// <summary>
         /// add include path 
         /// </summary>
@@ -193,6 +287,7 @@ namespace DIGA.Tools.Compiler.Tcc
                 return TccNativeX86.AddIncludePath(this.Handle, path);
             }
         }
+
         /// <summary>
         /// add system include path
         /// </summary>
@@ -226,6 +321,7 @@ namespace DIGA.Tools.Compiler.Tcc
                 TccNativeX86.DefineSymbol(this.Handle, sym, value);
             }
         }
+
         /// <summary>
         ///  undefine preprocess symbol 'sym'
         /// </summary>
@@ -286,11 +382,11 @@ namespace DIGA.Tools.Compiler.Tcc
         {
             if (this.IsX64)
             {
-                return TccNativeX64.SetOutputType(this.Handle, (int)ouPutType);
+                return TccNativeX64.SetOutputType(this.Handle, (int) ouPutType);
             }
             else
             {
-                return TccNativeX86.SetOutputType(this.Handle, (int)ouPutType);
+                return TccNativeX86.SetOutputType(this.Handle, (int) ouPutType);
             }
         }
 
@@ -311,6 +407,7 @@ namespace DIGA.Tools.Compiler.Tcc
                 return TccNativeX86.AddLibPath(this.Handle, path);
             }
         }
+
         /// <summary>
         /// the library name is the same as the argument of the '-l' option of TCC
         /// </summary>
@@ -366,7 +463,7 @@ namespace DIGA.Tools.Compiler.Tcc
             }
         }
 
-       
+
         public int AddSymbol(string name, Delegate del)
         {
             IntPtr ptr = Marshal.GetFunctionPointerForDelegate(del);
@@ -453,8 +550,8 @@ namespace DIGA.Tools.Compiler.Tcc
 
         public void Dispose()
         {
+            Marshal.FreeHGlobal(this._OpaqueRef.Handle);
             this.Delete();
-            
         }
     }
 }
