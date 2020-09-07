@@ -46,7 +46,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                 100,        // Button width
                 100,        // Button height
                 hwnd,     // Parent window
-                ID_BN,       // No menu.
+                (HMENU)ID_BN,       // No menu.
                 g_hInst, 
                 NULL);      // Pointer not needed.
             break;
@@ -83,7 +83,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         case WM_COMMAND:
             if(wParam == ID_BN)
-                ButtonClickx(hwnd);
+                //ButtonClickx(hwnd);
             break;
         // ----------------------- let windows do all other stuff
         default:

@@ -1,0 +1,429 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Diga.Tools.Compiler.Tcc</RootNamespace>
+    <AssemblyName>Diga.Tools.Compiler.Tcc</AssemblyName>
+    <Copyright>Copyright (c) 2020 Dipl.-Ing.(FH) Guido Agnesmeyer</Copyright>
+    <Description>This Dll wraps the native LIBTCC.dll.
+You can compile into a native EXE, DLL or you can Run in memory.</Description>
+    <PackageTags>csharp tcc tynytcc c jit</PackageTags>
+    <PackageIcon></PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ITAgnesmeyer/DIGA.Tools.Compiler.Tcc</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ITAgnesmeyer/DIGA.Tools.Compiler.Tcc</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="native\include\assert.h" />
+    <None Remove="native\include\conio.h" />
+    <None Remove="native\include\ctype.h" />
+    <None Remove="native\include\dir.h" />
+    <None Remove="native\include\direct.h" />
+    <None Remove="native\include\dirent.h" />
+    <None Remove="native\include\dos.h" />
+    <None Remove="native\include\errno.h" />
+    <None Remove="native\include\excpt.h" />
+    <None Remove="native\include\fcntl.h" />
+    <None Remove="native\include\fenv.h" />
+    <None Remove="native\include\float.h" />
+    <None Remove="native\include\inttypes.h" />
+    <None Remove="native\include\io.h" />
+    <None Remove="native\include\limits.h" />
+    <None Remove="native\include\locale.h" />
+    <None Remove="native\include\malloc.h" />
+    <None Remove="native\include\math.h" />
+    <None Remove="native\include\mem.h" />
+    <None Remove="native\include\memory.h" />
+    <None Remove="native\include\process.h" />
+    <None Remove="native\include\sec_api\conio_s.h" />
+    <None Remove="native\include\sec_api\crtdbg_s.h" />
+    <None Remove="native\include\sec_api\io_s.h" />
+    <None Remove="native\include\sec_api\mbstring_s.h" />
+    <None Remove="native\include\sec_api\search_s.h" />
+    <None Remove="native\include\sec_api\stdio_s.h" />
+    <None Remove="native\include\sec_api\stdlib_s.h" />
+    <None Remove="native\include\sec_api\stralign_s.h" />
+    <None Remove="native\include\sec_api\string_s.h" />
+    <None Remove="native\include\sec_api\sys\timeb_s.h" />
+    <None Remove="native\include\sec_api\tchar_s.h" />
+    <None Remove="native\include\sec_api\time_s.h" />
+    <None Remove="native\include\sec_api\wchar_s.h" />
+    <None Remove="native\include\setjmp.h" />
+    <None Remove="native\include\share.h" />
+    <None Remove="native\include\signal.h" />
+    <None Remove="native\include\stdarg.h" />
+    <None Remove="native\include\stdbool.h" />
+    <None Remove="native\include\stddef.h" />
+    <None Remove="native\include\stdint.h" />
+    <None Remove="native\include\stdio.h" />
+    <None Remove="native\include\stdlib.h" />
+    <None Remove="native\include\string.h" />
+    <None Remove="native\include\sys\fcntl.h" />
+    <None Remove="native\include\sys\file.h" />
+    <None Remove="native\include\sys\locking.h" />
+    <None Remove="native\include\sys\stat.h" />
+    <None Remove="native\include\sys\time.h" />
+    <None Remove="native\include\sys\timeb.h" />
+    <None Remove="native\include\sys\types.h" />
+    <None Remove="native\include\sys\unistd.h" />
+    <None Remove="native\include\sys\utime.h" />
+    <None Remove="native\include\tcclib.h" />
+    <None Remove="native\include\tcc\tcc_libm.h" />
+    <None Remove="native\include\tchar.h" />
+    <None Remove="native\include\time.h" />
+    <None Remove="native\include\vadefs.h" />
+    <None Remove="native\include\values.h" />
+    <None Remove="native\include\varargs.h" />
+    <None Remove="native\include\wchar.h" />
+    <None Remove="native\include\wctype.h" />
+    <None Remove="native\include\winapi\basetsd.h" />
+    <None Remove="native\include\winapi\basetyps.h" />
+    <None Remove="native\include\winapi\guiddef.h" />
+    <None Remove="native\include\winapi\poppack.h" />
+    <None Remove="native\include\winapi\pshpack1.h" />
+    <None Remove="native\include\winapi\pshpack2.h" />
+    <None Remove="native\include\winapi\pshpack4.h" />
+    <None Remove="native\include\winapi\pshpack8.h" />
+    <None Remove="native\include\winapi\winbase.h" />
+    <None Remove="native\include\winapi\wincon.h" />
+    <None Remove="native\include\winapi\windef.h" />
+    <None Remove="native\include\winapi\windows.h" />
+    <None Remove="native\include\winapi\winerror.h" />
+    <None Remove="native\include\winapi\wingdi.h" />
+    <None Remove="native\include\winapi\winnt.h" />
+    <None Remove="native\include\winapi\winreg.h" />
+    <None Remove="native\include\winapi\winuser.h" />
+    <None Remove="native\include\winapi\winver.h" />
+    <None Remove="native\include\_mingw.h" />
+    <None Remove="native\libtcc\libtcc.def" />
+    <None Remove="native\libtcc\libtcc.h" />
+    <None Remove="native\lib\chkstk.S" />
+    <None Remove="native\lib\crt1.c" />
+    <None Remove="native\lib\crt1w.c" />
+    <None Remove="native\lib\dllcrt1.c" />
+    <None Remove="native\lib\dllmain.c" />
+    <None Remove="native\lib\gdi32.def" />
+    <None Remove="native\lib\kernel32.def" />
+    <None Remove="native\lib\msvcrt.def" />
+    <None Remove="native\lib\user32.def" />
+    <None Remove="native\lib\wincrt1.c" />
+    <None Remove="native\lib\wincrt1w.c" />
+    <None Remove="native\x64\libtcc.dll" />
+    <None Remove="native\x86\libtcc.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccCompiler.cs" Link="TccCompiler.cs" />
+    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccErrorFuncDelegate.cs" Link="TccErrorFuncDelegate.cs" />
+    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccNativeX64.cs" Link="TccNativeX64.cs" />
+    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccNativeX86.cs" Link="TccNativeX86.cs" />
+    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccOutPutType.cs" Link="TccOutPutType.cs" />
+    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccOutPutTypeConst.cs" Link="TccOutPutTypeConst.cs" />
+    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccRealocateConst.cs" Link="TccRealocateConst.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="native\include\assert.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\conio.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\ctype.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\dir.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\direct.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\dirent.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\dos.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\errno.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\excpt.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\fcntl.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\fenv.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\float.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\inttypes.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\io.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\limits.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\locale.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\malloc.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\math.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\mem.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\memory.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\process.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\conio_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\crtdbg_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\io_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\mbstring_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\search_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\stdio_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\stdlib_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\stralign_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\string_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\sys\timeb_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\tchar_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\time_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sec_api\wchar_s.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\setjmp.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\share.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\signal.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\stdarg.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\stdbool.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\stddef.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\stdint.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\stdio.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\stdlib.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\string.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sys\fcntl.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sys\file.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sys\locking.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sys\stat.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sys\time.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sys\timeb.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sys\types.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sys\unistd.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\sys\utime.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\tcclib.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\tcc\tcc_libm.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\tchar.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\time.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\vadefs.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\values.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\varargs.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\wchar.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\wctype.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\basetsd.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\basetyps.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\guiddef.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\poppack.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\pshpack1.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\pshpack2.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\pshpack4.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\pshpack8.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\winbase.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\wincon.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\windef.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\windows.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\winerror.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\wingdi.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\winnt.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\winreg.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\winuser.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\winapi\winver.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\include\_mingw.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\libtcc\libtcc.def">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\libtcc\libtcc.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\chkstk.S">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\crt1.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\crt1w.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\dllcrt1.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\dllmain.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\gdi32.def">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\kernel32.def">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\msvcrt.def">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\user32.def">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\wincrt1.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\lib\wincrt1w.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\x64\libtcc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="native\x86\libtcc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="native\lib\libtcc1-32.a">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="native\lib\libtcc1-64.a">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

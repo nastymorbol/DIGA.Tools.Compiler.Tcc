@@ -1,4 +1,4 @@
-﻿namespace DIGA.Tools.Compiler.Tcc
+﻿namespace Diga.Tools.Compiler.Tcc
 {
     public static class TccOutPutTypeConst
     {

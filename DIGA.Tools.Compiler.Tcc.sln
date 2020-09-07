@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30420.98
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DIGA.Tools.Compiler.Tcc", "DIGA.Tools.Compiler.Tcc\DIGA.Tools.Compiler.Tcc.csproj", "{968F143E-C493-4B6E-8811-32E760E14B32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diga.Tools.Compiler.Tcc", "Diga.Tools.Compiler.Tcc\Diga.Tools.Compiler.Tcc.csproj", "{968F143E-C493-4B6E-8811-32E760E14B32}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTccCompile", "TestTccCompile\TestTccCompile.csproj", "{80FCE824-013A-441C-9098-61C7A88F6FBF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diga.Tools.Compiler.Tcc.Core", "Diga.Tools.Compiler.Tcc.Core\Diga.Tools.Compiler.Tcc.Core.csproj", "{FD2B0932-701D-4B03-9EF4-22A1AE731727}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,18 @@ Global
 		{80FCE824-013A-441C-9098-61C7A88F6FBF}.Release|x64.Build.0 = Release|x64
 		{80FCE824-013A-441C-9098-61C7A88F6FBF}.Release|x86.ActiveCfg = Release|x86
 		{80FCE824-013A-441C-9098-61C7A88F6FBF}.Release|x86.Build.0 = Release|x86
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Debug|x64.Build.0 = Debug|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Debug|x86.Build.0 = Debug|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Release|x64.ActiveCfg = Release|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Release|x64.Build.0 = Release|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Release|x86.ActiveCfg = Release|Any CPU
+		{FD2B0932-701D-4B03-9EF4-22A1AE731727}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
