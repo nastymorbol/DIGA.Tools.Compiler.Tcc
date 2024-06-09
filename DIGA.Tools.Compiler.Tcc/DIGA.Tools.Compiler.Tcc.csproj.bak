@@ -1,131 +1,95 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{968F143E-C493-4B6E-8811-32E760E14B32}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Diga.Tools.Compiler.Tcc</RootNamespace>
     <AssemblyName>Diga.Tools.Compiler.Tcc</AssemblyName>
-    <Copyright>Copyright (c) 2020 Dipl.-Ing.(FH) Guido Agnesmeyer</Copyright>
-    <Description>This Dll wraps the native LIBTCC.dll.
-You can compile into a native EXE, DLL or you can Run in memory.</Description>
-    <PackageTags>csharp tcc tynytcc c jit</PackageTags>
-    <PackageIcon></PackageIcon>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/ITAgnesmeyer/DIGA.Tools.Compiler.Tcc</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/ITAgnesmeyer/DIGA.Tools.Compiler.Tcc</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <TargetFramework>net8.0</TargetFramework>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
-    <None Remove="native\include\assert.h" />
-    <None Remove="native\include\conio.h" />
-    <None Remove="native\include\ctype.h" />
-    <None Remove="native\include\dir.h" />
-    <None Remove="native\include\direct.h" />
-    <None Remove="native\include\dirent.h" />
-    <None Remove="native\include\dos.h" />
-    <None Remove="native\include\errno.h" />
-    <None Remove="native\include\excpt.h" />
-    <None Remove="native\include\fcntl.h" />
-    <None Remove="native\include\fenv.h" />
-    <None Remove="native\include\float.h" />
-    <None Remove="native\include\inttypes.h" />
-    <None Remove="native\include\io.h" />
-    <None Remove="native\include\limits.h" />
-    <None Remove="native\include\locale.h" />
-    <None Remove="native\include\malloc.h" />
-    <None Remove="native\include\math.h" />
-    <None Remove="native\include\mem.h" />
-    <None Remove="native\include\memory.h" />
-    <None Remove="native\include\process.h" />
-    <None Remove="native\include\sec_api\conio_s.h" />
-    <None Remove="native\include\sec_api\crtdbg_s.h" />
-    <None Remove="native\include\sec_api\io_s.h" />
-    <None Remove="native\include\sec_api\mbstring_s.h" />
-    <None Remove="native\include\sec_api\search_s.h" />
-    <None Remove="native\include\sec_api\stdio_s.h" />
-    <None Remove="native\include\sec_api\stdlib_s.h" />
-    <None Remove="native\include\sec_api\stralign_s.h" />
-    <None Remove="native\include\sec_api\string_s.h" />
-    <None Remove="native\include\sec_api\sys\timeb_s.h" />
-    <None Remove="native\include\sec_api\tchar_s.h" />
-    <None Remove="native\include\sec_api\time_s.h" />
-    <None Remove="native\include\sec_api\wchar_s.h" />
-    <None Remove="native\include\setjmp.h" />
-    <None Remove="native\include\share.h" />
-    <None Remove="native\include\signal.h" />
-    <None Remove="native\include\stdarg.h" />
-    <None Remove="native\include\stdbool.h" />
-    <None Remove="native\include\stddef.h" />
-    <None Remove="native\include\stdint.h" />
-    <None Remove="native\include\stdio.h" />
-    <None Remove="native\include\stdlib.h" />
-    <None Remove="native\include\string.h" />
-    <None Remove="native\include\sys\fcntl.h" />
-    <None Remove="native\include\sys\file.h" />
-    <None Remove="native\include\sys\locking.h" />
-    <None Remove="native\include\sys\stat.h" />
-    <None Remove="native\include\sys\time.h" />
-    <None Remove="native\include\sys\timeb.h" />
-    <None Remove="native\include\sys\types.h" />
-    <None Remove="native\include\sys\unistd.h" />
-    <None Remove="native\include\sys\utime.h" />
-    <None Remove="native\include\tcclib.h" />
-    <None Remove="native\include\tcc\tcc_libm.h" />
-    <None Remove="native\include\tchar.h" />
-    <None Remove="native\include\time.h" />
-    <None Remove="native\include\vadefs.h" />
-    <None Remove="native\include\values.h" />
-    <None Remove="native\include\varargs.h" />
-    <None Remove="native\include\wchar.h" />
-    <None Remove="native\include\wctype.h" />
-    <None Remove="native\include\winapi\basetsd.h" />
-    <None Remove="native\include\winapi\basetyps.h" />
-    <None Remove="native\include\winapi\guiddef.h" />
-    <None Remove="native\include\winapi\poppack.h" />
-    <None Remove="native\include\winapi\pshpack1.h" />
-    <None Remove="native\include\winapi\pshpack2.h" />
-    <None Remove="native\include\winapi\pshpack4.h" />
-    <None Remove="native\include\winapi\pshpack8.h" />
-    <None Remove="native\include\winapi\winbase.h" />
-    <None Remove="native\include\winapi\wincon.h" />
-    <None Remove="native\include\winapi\windef.h" />
-    <None Remove="native\include\winapi\windows.h" />
-    <None Remove="native\include\winapi\winerror.h" />
-    <None Remove="native\include\winapi\wingdi.h" />
-    <None Remove="native\include\winapi\winnt.h" />
-    <None Remove="native\include\winapi\winreg.h" />
-    <None Remove="native\include\winapi\winuser.h" />
-    <None Remove="native\include\winapi\winver.h" />
-    <None Remove="native\include\_mingw.h" />
-    <None Remove="native\libtcc\libtcc.def" />
-    <None Remove="native\libtcc\libtcc.h" />
-    <None Remove="native\lib\chkstk.S" />
-    <None Remove="native\lib\crt1.c" />
-    <None Remove="native\lib\crt1w.c" />
-    <None Remove="native\lib\dllcrt1.c" />
-    <None Remove="native\lib\dllmain.c" />
-    <None Remove="native\lib\gdi32.def" />
-    <None Remove="native\lib\kernel32.def" />
-    <None Remove="native\lib\msvcrt.def" />
-    <None Remove="native\lib\user32.def" />
-    <None Remove="native\lib\wincrt1.c" />
-    <None Remove="native\lib\wincrt1w.c" />
-    <None Remove="native\x64\libtcc.dll" />
-    <None Remove="native\x86\libtcc.dll" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
   </ItemGroup>
-
   <ItemGroup>
-    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccCompiler.cs" Link="TccCompiler.cs" />
-    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccErrorFuncDelegate.cs" Link="TccErrorFuncDelegate.cs" />
-    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccNativeX64.cs" Link="TccNativeX64.cs" />
-    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccNativeX86.cs" Link="TccNativeX86.cs" />
-    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccOutPutType.cs" Link="TccOutPutType.cs" />
-    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccOutPutTypeConst.cs" Link="TccOutPutTypeConst.cs" />
-    <Compile Include="..\Diga.Tools.Compiler.Tcc\TccRealocateConst.cs" Link="TccRealocateConst.cs" />
+    <Compile Include="TccCompiler.cs" />
+    <Compile Include="TccErrorFuncDelegate.cs" />
+    <Compile Include="TccNativeX64.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TccNativeX86.cs" />
+    <Compile Include="TccOutPutType.cs" />
+    <Compile Include="TccOutPutTypeConst.cs" />
+    <Compile Include="TccRealocateConst.cs" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Include="native\lib\libtcc1-32.a">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="native\lib\libtcc1-64.a">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="native\include\assert.h">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -416,14 +380,5 @@ You can compile into a native EXE, DLL or you can Run in memory.</Description>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="native\lib\libtcc1-32.a">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="native\lib\libtcc1-64.a">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
